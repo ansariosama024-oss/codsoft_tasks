@@ -5,6 +5,7 @@ import {
   XAxis,
   YAxis,
   Tooltip,
+  LabelList,
 } from "recharts";
 
 const ProjectProgressChart = ({ projects = [], tasks = [] }) => {
@@ -24,12 +25,16 @@ const ProjectProgressChart = ({ projects = [], tasks = [] }) => {
 
     const progress =
       projectTasks.length > 0
-        ? Math.round((completedTasks.length / projectTasks.length) * 100)
+        ? Math.round(
+            (completedTasks.length / projectTasks.length) * 100
+          )
         : 0;
 
     return {
       name: project.name,
       progress,
+      totalTasks: projectTasks.length,
+      completedTasks: completedTasks.length,
     };
   });
 
@@ -39,17 +44,48 @@ const ProjectProgressChart = ({ projects = [], tasks = [] }) => {
         Project Progress
       </h2>
 
-      <div style={{ width: "100%", height: 350 }}>
+      <div style={{ width: "100%", height: 400 }}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data}>
-            <XAxis dataKey="name" />
-            <YAxis domain={[0, 100]} />
-            <Tooltip formatter={(value) => `${value}%`} />
+          <BarChart
+            data={data}
+            margin={{
+              top: 25,
+              right: 20,
+              left: 20,
+              bottom: 90,
+            }}
+          >
+            <XAxis
+  dataKey="name"
+  interval={0}
+  angle={-20}
+  textAnchor="end"
+  height={110}
+  tick={{ fontSize: 12 }}
+/>
+
+            <YAxis
+              domain={[0, 100]}
+              tickFormatter={(value) => `${value}%`}
+            />
+
+            <Tooltip
+              formatter={(value) => [`${value}%`, "Progress"]}
+              labelFormatter={(label) => `Project: ${label}`}
+            />
+
             <Bar
               dataKey="progress"
               fill="#3b82f6"
               radius={[8, 8, 0, 0]}
-            />
+              minPointSize={3}
+            >
+              <LabelList
+                dataKey="progress"
+                position="top"
+                formatter={(value) => `${value}%`}
+              />
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>

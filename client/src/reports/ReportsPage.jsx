@@ -52,7 +52,7 @@ const ReportsPage = () => {
     totalTasks: tasks.length,
     totalMembers: members.length,
     completedTasks: tasks.filter(
-      (task) => task.status === "Completed"
+      (task) => task.status?.trim().toLowerCase() === "done"
     ).length,
   };
 }, [projects, tasks, members]);
